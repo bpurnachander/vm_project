@@ -1,0 +1,27 @@
+$GCP='\\{{ file_server_address }}' #ip for file_shares
+$user=$env:username
+
+Try {
+    Set-ExecutionPolicy -ExecutionPolicy 'ByPass' -Scope 'Process' -Force -ErrorAction 'Stop'
+} Catch {}
+
+$CurrentGroups = [System.Security.Principal.WindowsIdentity]::GetCurrent().Groups | ForEach-Object {$_.Translate([Security.Principal.NTAccount])}
+
+$List = @{
+    'BUILTIN\Users' = @(("F:","$GCP\App"),("G:","$GCP\Dba"))
+}
+
+foreach($group_map in $List.GetEnumerator()){
+    $GroupName = $group_map.Key
+    $DriveList = $group_map.Value
+    foreach ($drive in $DriveList) {
+        if ($drive -ne 0 -and $CurrentGroups -contains $GroupName) { # Check for dumb list addition
+            if (Get-PSDrive -Name $drive[0][0] -ErrorAction SilentlyContinue) { # Check for already mounted letter
+                (New-Object -ComObject WScript.Network).RemoveNetworkDrive($drive[0],$True,$True)
+            }
+            (New-Object -ComObject WScript.Network).MapNetworkDrive($drive[0], $drive[1], "true", $user)
+        } else {
+            (New-Object -ComObject WScript.Network).MapNetworkDrive($DriveList[0][0], $DriveList[0][1], "true", $user)
+        }
+    }
+}

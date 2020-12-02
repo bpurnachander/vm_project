@@ -1,0 +1,7 @@
+---
+
+- name: Install Windows software
+  hosts: sbxserver
+
+  roles:
+  - windows_mount_disk
