@@ -26,6 +26,6 @@
 ###This task will be used only if the logon script is not run by domain GPO 
 - name: Add logon script run to system registry
   win_regedit:
-    path: '{{ registry_path }}'
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Run
     name: script
     data: 'powershell -File {{ logon_scrips_path }}\{{ logon_scrips_name }}'
