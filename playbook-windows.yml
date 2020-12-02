@@ -2,6 +2,14 @@
 
 - name: Install Windows software
   hosts: sbxserver
+  vars:
+    ansible_user: ansible-admin
+    #ansible_password: "{{ lookup('env','WINDOWS_ANSIBLE_ADMIN_CREDS') }}"
+    ansible_password: 'CoreLogic!1234'
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: basic
+    ansible_winrm_server_cert_validation: ignore
 
   roles:
   - windows_mount_disk
