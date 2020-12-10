@@ -1,7 +1,7 @@
 ---
 
 - name: Install Windows software
-  hosts: prdserver
+  hosts: filerserver
   vars:
     ansible_user: ansible-admin
     #ansible_password: "{{ lookup('env','WINDOWS_ANSIBLE_ADMIN_CREDS') }}"
