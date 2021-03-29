@@ -1,7 +1,0 @@
----
-
-- name: Deploy CMAS DLL Files to GAC MANAGER
-  hosts: all  
-
-  roles:
-  - ../roles/cmas_dll_deploy

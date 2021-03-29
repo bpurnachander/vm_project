@@ -1,7 +1,0 @@
----
-
-- name: Mount Network Drives Using Powershell Script
-  hosts: all
-
-  roles:
-  - windows_mount_disk

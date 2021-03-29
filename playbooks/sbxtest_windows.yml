@@ -1,7 +1,0 @@
----
-
-- name: Install Windows software
-  hosts: all
-
-  roles:
-  - ../roles/test_windows_tasks

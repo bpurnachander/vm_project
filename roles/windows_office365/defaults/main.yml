@@ -1,8 +1,0 @@
----
-
-winrm_retry: 5
-winrm_retry_delay: 10
-
-install_folder: "C:\\Installers\\Office365"
-artifactory_url: "https://artifactory.solutions.corelogic.com"
-license_key: "12345-12345-12345-12315-45135"

@@ -1,7 +1,0 @@
----
-
-- name: Install MSOffice software
-  hosts: all
-
-  roles:
-  - windows_office365
