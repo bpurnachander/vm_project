@@ -1,0 +1,7 @@
+---
+
+- name: Install 3rd Party Softwares
+  hosts: all
+
+  roles:
+  - 3rdparty_software

@@ -4,3 +4,4 @@
 file_server_address: "10.46.168.205"
 logon_scrips_path: C:\MountDrives
 logon_scrips_name: network_drives_mapping.ps1
+drive_mount: "all"

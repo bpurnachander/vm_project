@@ -22,7 +22,7 @@ else
 }
 
 $List = @{
-    'BUILTIN\Users' = @(("F:","$GCP\App"),("G:","$GCP\Dba"))
+    'BUILTIN\Users' = @(("G:","$GCP\Dba"),("0"))
 }
 
 foreach($group_map in $List.GetEnumerator()){
@@ -34,8 +34,6 @@ foreach($group_map in $List.GetEnumerator()){
                 (New-Object -ComObject WScript.Network).RemoveNetworkDrive($drive[0],$True,$True)
             }
             (New-Object -ComObject WScript.Network).MapNetworkDrive($drive[0], $drive[1], "true", $user)
-        } else {
-            (New-Object -ComObject WScript.Network).MapNetworkDrive($DriveList[0][0], $DriveList[0][1], "true", $user)
         }
     }
 }

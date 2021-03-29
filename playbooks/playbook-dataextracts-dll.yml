@@ -1,0 +1,7 @@
+---
+
+- name: Deploy Data Extracts DLL Files to GAC MANAGER
+  hosts: all
+
+  roles:
+  - ../roles/dataextracts_dll_deploy

@@ -1,0 +1,83 @@
+---
+
+- name: "Get Details of {{ item }} Dll files"
+  win_uri:
+    url: '{{ jfrog_base_url }}/api/storage/{{ jfrog_repo }}/{{ item }}?lastModified'
+    username: "{{ jfrog_username }}"
+    password: "{{ jfrog_password }}"
+    force_basic_auth: "{{ force_basic_auth }}"
+    method: GET
+    status_code: "{{ status_code }}"
+    return_content: "{{ return_content }}"
+  register: result
+  when: jfrog_version == "latest"
+
+- name: "Get the last_Updated version from jFrog of {{ item }} {{result.json.uri}}"
+  win_uri:
+    url: "{{result.json.uri}}"
+    username: "{{ jfrog_username }}"
+    password: "{{ jfrog_password }}"
+    force_basic_auth: "{{ force_basic_auth }}"
+    method: GET
+    status_code: "{{ status_code }}"
+    return_content: "{{ return_content }}"
+  register: download_uri
+  when: jfrog_version == "latest"
+
+- name: "Download {{ item }} {{ download_uri.json.path.split(\"/\")[2] }} Project files to Server"
+  win_get_url:
+    url: "{{ download_uri.json.downloadUri }}"
+    username: "{{ jfrog_username }}"
+    password: "{{ jfrog_password }}"
+    dest: "{{ dest_location }}"
+  when: jfrog_version == "latest"
+
+- name: "Unzip {{ item }} Project Files to the Directory"
+  win_unzip:
+    src: '{{ dest_location }}\{{ download_uri.json.path.split("/")[3] }}'
+    dest: "{{ dest_location }}"
+
+- name: "Uninstall the DirectMatchSrv dll using GAC"
+  win_command: 'gacutil.exe /u DirectMatchSrv'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Uninstall the NameMatchSrv dll using GAC"
+  win_command: 'gacutil.exe /u NameMatchSrv'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Uninstall the Model dll using GAC"
+  win_command: 'gacutil.exe /u Model'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Uninstall the SqlDb dll using GAC"
+  win_command: 'gacutil.exe /u SqlDb'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Install the DirectMatchSrv Dll using GAC"
+  win_command: 'gacutil.exe /i {{ dest_location }}\\DirectMatchSrv.dll'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Install the NameMatchSrv Dll using GAC"
+  win_command: 'gacutil.exe /i {{ dest_location }}\\NameMatchSrv.dll'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Install the Model Dll using GAC"
+  win_command: 'gacutil.exe /i {{ dest_location }}\\Model.dll'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Install the SqlDb Dll using GAC"
+  win_command: 'gacutil.exe /i {{ dest_location }}\\SqlDb.dll'
+  args:
+    chdir: "{{ gacPath.stdout_lines[0] }}"
+
+- name: "Remove {{ item }} Project Zip file"
+  win_file:
+    path: '{{ dest_location }}\{{ download_uri.json.path.split("/")[3] }}'
+    state: absent

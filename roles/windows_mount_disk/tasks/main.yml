@@ -22,6 +22,14 @@
     backup: no
     src: templates/network_drives_mapping.ps1.j2
     dest: '{{ logon_scrips_path }}/{{ logon_scrips_name }}'
+  when: drive_mount == "all"
+
+- name: Copy logon script to server
+  win_template:
+    backup: no
+    src: templates/network_single_drive_mapping.ps1.j2
+    dest: '{{ logon_scrips_path }}/{{ logon_scrips_name }}'
+  when: drive_mount == "single"
 
 ###This task will be used only if the logon script is not run by domain GPO 
 - name: Add logon script run to system registry

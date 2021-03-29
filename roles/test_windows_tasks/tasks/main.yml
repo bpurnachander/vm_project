@@ -1,0 +1,6 @@
+---
+
+- name: Create Destination directory
+  win_file:
+    path: "{{ dest_location }}"
+    state: directory
